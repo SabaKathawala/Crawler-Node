@@ -1,0 +1,14 @@
+{
+  "name": "node-web-crawler",
+  "version": "0.0.1",
+  "description": "Crawl web.",
+  "main": "server.js",
+  "author": "Saba",
+  "dependencies": {
+    "async": "^2.6.1",
+    "cheerio": "latest",
+    "express": "latest",
+    "lodash": "latest",
+    "request": "latest"
+  }
+}
