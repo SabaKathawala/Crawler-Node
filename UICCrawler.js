@@ -55,7 +55,7 @@ class UICCrawler extends Crawler.Crawler {
         if(response && response.statusCode === 200) {
           console.log('Succesful Request for: '+ crawlUrl );
 
-            fs.appendFile('crawled_links.txt', crawlUrl+'\\n', function (err) {
+            fs.appendFile('crawled_links.txt', crawlUrl+'\n', function (err) {
                 if (err) {
                   console.log('Error opening file');
                 }
