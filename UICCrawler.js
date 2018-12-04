@@ -12,54 +12,57 @@ const Crawler = require ('./Crawler');
 const random = require('random');
 const host = 'www.uic.edu';
 const sleep = require('sleep');
-var count = 1;
+
+const MAX_PAGES_TO_VISIT = 10;
+var numPageVisited = 1;
+
 class UICCrawler extends Crawler.Crawler {
   constructor(url, maxPages) {
     super(url, maxPages);
-  }
-
-  crawlForHtml() {
     console.log('Crawling for UIC Domain');
-    let urls = [this.url];
-    let visited = new Set(this.url);
-
-
-    while(count <= this.maxPages) {
-      console.log(count);
-      let crawlUrl = urls.shift();
-      this.makeRequest(crawlUrl, urls, visited);
-      sleep.sleep(2);
-    }
-    console.log(urls);
   }
 
-  makeRequest(crawlUrl, urls, visited){
+  crawlForHtml(crawler) {
+    var self = this;
+
+    if(numPageVisited >= crawler.maxPages) {
+      //console.log("Reached max limit of number of pages to visit.");
+      return;
+    }
+    let nextPage = crawler.pagesToVisit.shift();
+    sleep.sleep(2);
+    if (crawler.visited.has(nextPage)) {
+      // We've already visited this page, so repeat the crawl
+      crawler.crawlForHtml(crawler);
+    } else {
+      // New page we haven't visited
+      crawler.makeRequest(nextPage, crawler, crawler.crawlForHtml);
+    }
+  }
+
+  makeRequest(crawlUrl, crawler, callback){
+    var self = this;
+    crawler.visited.add(crawlUrl);
+    numPageVisited++;
+    console.log('Visiting page: ' + crawlUrl);
 
     request(crawlUrl, function (error, response, body) {
         if(error) {
-          console.log(error);
+          console.log(crawlUrl);
+          console.log('Error Request: '+ error);
+          return;
         }
         if(response && response.statusCode === 200) {
           console.log('Succesful Request for: '+ crawlUrl );
+
             fs.appendFile('crawled_links.txt', crawlUrl+'\\n', function (err) {
                 if (err) {
-                  console.log(err);
                   console.log('Error opening file');
                 }
             });
+            crawler.saveFile(body);
 
-            var $ = cheerio.load(body);
-            let content = $('html *').contents().map(function() {
-              return (this.type === 'text') ? $(this).text()+' ' : '';
-            }).get().join('');
-            //temp hack for files
-            fs.writeFile('pages/'+random.int(0, 5000), content, function (err) {
-                if (err) {
-                  console.log(err);
-                  console.log('Error writing to file');
-                }
-            });
-
+            let $ = cheerio.load(body);
             //get metadata about link
             let pageObject = {};
             pageObject.title = $('title').text();
@@ -93,21 +96,34 @@ class UICCrawler extends Crawler.Crawler {
                   href.hash = '';
                   //console.log(href);
                   pageObject.outLinks.push({anchorText: $(elem).text(), url: elem.attribs.href});
-                  if(!visited.has(href.toString())) {
+                  let link = href.toString();
+                  link = link.replace(/\/$/, "");
+                  if(!crawler.visited.has(link)) {
                     //console.log(href.toString());
-                    urls.push(href);
 
+                    crawler.pagesToVisit.push(link);
+                    callback(crawler);
                   }
                 }
             });
           //all links parsed
-          count++;
           console.log('All links parsed for: ' + crawlUrl);
         }
         //if ends
     });
+  }
 
-    return urls;
+  saveFile(body) {
+    let $ = cheerio.load(body);
+    let content = $('html *').contents().map(function() {
+      return (this.type === 'text') ? $(this).text()+' ' : '';
+    }).get().join('');
+    //temp hack for files
+    fs.writeFile('pages/'+random.int(0, 5000), content, function (err) {
+        if (err) {
+          console.log('Error writing to file');
+        }
+    });
   }
 
 }

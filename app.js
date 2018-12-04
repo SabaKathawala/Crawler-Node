@@ -5,7 +5,7 @@ var base = 'www.uic.edu';
 var firstLink = 'http://' + base;
 
 var crawler = new UICCrawler.UICCrawler(firstLink, 10);
-crawler.crawlForHtml();
+crawler.crawlForHtml(crawler);
 
 
 //1. crawler -> pages (uic.edu) (3000 pages)
