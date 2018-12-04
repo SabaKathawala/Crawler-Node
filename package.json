@@ -9,6 +9,9 @@
     "cheerio": "latest",
     "express": "latest",
     "lodash": "latest",
-    "request": "latest"
+    "random": "^2.0.12",
+    "request": "latest",
+    "sleep": "^5.2.3",
+    "url-parser": "0.0.1"
   }
 }
