@@ -8,9 +8,16 @@
     "async": "^2.6.1",
     "cheerio": "latest",
     "express": "latest",
+    "lockfile": "^1.0.4",
     "lodash": "latest",
+    "node-redis": "^0.1.7",
+    "proper-lockfile": "^3.2.0",
     "random": "^2.0.12",
+    "redis": "^2.8.0",
+    "redis-rejson": "^1.0.0",
+    "redis-server": "^1.2.2",
     "request": "latest",
+    "rwlock": "^5.0.0",
     "sleep": "^5.2.3",
     "url-parser": "0.0.1"
   }

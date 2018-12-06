@@ -1,10 +1,11 @@
 
 const UICCrawler = require('./UICCrawler');
 
-var base = 'www.uic.edu';
-var firstLink = 'http://' + base;
+var base = 'www.cs.uic.edu';
+var firstLink = 'https://' + base;
+var subPart = 'uic.edu';
 
-var crawler = new UICCrawler.UICCrawler(firstLink, 10);
+var crawler = new UICCrawler.UICCrawler(firstLink, subPart, 4000);
 crawler.crawlForHtml(crawler);
 
 
