@@ -4,8 +4,6 @@ class Crawler {
     this.url = url;
     this.subPart = subPart;
     this.maxPages = maxPages;
-    this.visited = new Set(url);
-    //this.visited.add(url);
     this.pagesToVisit = [url];
   }
 
