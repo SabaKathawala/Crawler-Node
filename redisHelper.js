@@ -34,16 +34,39 @@ class RedisHelper {
         if(err) console.log(err);
     });
   }
-  getList(key) {
+  getList(key, list, callback) {
     this.client.lrange(key, 0, -1, function(err, reply) {
         if(err) console.log(err);
-        console.log(reply);
+        reply.forEach(function(val) {
+          list.add(val);
+        });
+        callback(list);
     });
   }
-  getSet(key) {
+
+  getListFromSet(key, list, callback) {
     this.client.smembers(key, function(err, reply) {
         if(err) console.log(err);
-        console.log(reply);
+        reply.forEach(function(val) {
+          list.push(val);
+        });
+        callback(list);
+    });
+  }
+
+  getSet(key, set, callback) {
+
+    this.client.smembers(key, function(err, reply) {
+        if(err) console.log(err);
+        reply.forEach(function(val) {
+          set.add(val);
+        });
+        callback(set);
+    });
+  }
+  sismember(key, value){
+    this.client.sismember(key, value, function(err, reply) {
+      return reply;
     });
   }
 

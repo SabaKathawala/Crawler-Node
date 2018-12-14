@@ -5,7 +5,7 @@ var base = 'www.cs.uic.edu';
 var firstLink = 'https://' + base;
 var subPart = 'uic.edu';
 
-var crawler = new UICCrawler.UICCrawler(firstLink, subPart, 4000);
+var crawler = new UICCrawler.UICCrawler(firstLink, subPart, 3000);
 crawler.crawlForHtml(crawler);
 
 
